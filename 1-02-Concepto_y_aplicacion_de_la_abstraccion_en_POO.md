@@ -83,9 +83,9 @@ class MetodoPago(ABC):
         pass
 
 class TarjetaCredito(MetodoPago):
-    def __init__(self, numero: str, fecha_vencimiento: str):
+    def __init__(self, numero: str, fecha_exp: str):
         self.numero = numero
-        self.fecha_vencimiento = fecha_vencimiento
+        self.fecha_exp = fecha_exp
     
     def procesar_pago(self, monto: float) -> bool:
         if self.verificar_fondos(monto):
@@ -118,6 +118,38 @@ class Transaccion:
     
     def ejecutar_pago(self, monto: float) -> bool:
         return self.metodo_pago.procesar_pago(monto)
+```
+#### Diagrama de Clases
+```mermaid
+classDiagram
+    class MetodoPago {
+        <<abstract>>
+        +procesar_pago(monto: float) bool
+        +verificar_fondos(monto: float) bool
+    }
+
+    class TarjetaCredito {
+        +numero: String
+        +fecha_exp: String
+        +procesar_pago(monto: float) bool
+        +verificar_fondos(monto: float) bool
+    }
+
+    class PayPal {
+        +email: String
+        +procesar_pago(monto: float) bool
+        +verificar_fondos(monto: float) bool
+    }
+
+    class Transaccion {
+        +metodo_pago: MetodoPago
+        +fecha: DateTime
+        +ejecutar_pago(monto: float) bool
+    }
+
+    MetodoPago <|-- TarjetaCredito
+    MetodoPago <|-- PayPal
+    Transaccion --> MetodoPago
 ```
 
 ### 2.3 Pruebas Unitarias
