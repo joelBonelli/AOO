@@ -151,6 +151,27 @@ classDiagram
     MetodoPago <|-- PayPal
     Transaccion --> MetodoPago
 ```
+#### Diagrama de Secuencia
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant Transaccion
+    participant MetodoPago
+    participant TarjetaCredito
+    participant PayPal
+
+    Cliente->>Transaccion: Crear Transaccion(metodo_pago)
+    Transaccion->>MetodoPago: ejecutar_pago(monto)
+    MetodoPago->>TarjetaCredito: procesar_pago(monto)
+    TarjetaCredito->>TarjetaCredito: verificar_fondos(monto)
+    TarjetaCredito->>MetodoPago: return True
+    MetodoPago->>Transaccion: return True
+    Transaccion->>Cliente: return True
+
+```
+
+
+
 
 ### 2.3 Pruebas Unitarias
 
