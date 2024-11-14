@@ -195,6 +195,12 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
+### Ejercicio: Tests con estos valores
+Test 1: Pago con tarjeta de crédito de $100
+Test 2: Pago con PayPal de $50
+Test 3: Pago con tarjeta de crédito de $200
+Test 4: Hacer un listado de transacciones
+
 ## 3. Ejercicio Práctico: Sistema de Biblioteca
 
 ```python
@@ -232,6 +238,10 @@ class DVD(MaterialBiblioteca):
     def calcular_fecha_devolucion(self) -> datetime:
         return datetime.now() + timedelta(days=3)
 ```
+## 3.1 Tarea
+### Hacer diagrama de clases
+### Hacer Diagrama de secuencia
+### Hacer pruebas unitarias
 
 ## 4. Mejores Prácticas
 
