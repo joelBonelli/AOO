@@ -173,6 +173,37 @@ sequenceDiagram
 
 
 
+#### Diagrama de Clases
+
+```mermaid
+classDiagram
+    class MetodoPago {
+        <<abstract>>
+        +procesar_pago(monto: float): bool
+        +verificar_fondos(monto: float): bool
+    }
+    class TarjetaCredito {
+        -numero: str
+        -fecha_vencimiento: str
+        +procesar_pago(monto: float): bool
+        +verificar_fondos(monto: float): bool
+    }
+    class PayPal {
+        -email: str
+        +procesar_pago(monto: float): bool
+        +verificar_fondos(monto: float): bool
+    }
+    class Transaccion {	
+        -metodo_pago: MetodoPago
+        -fecha: datetime
+        +ejecutar_pago(monto: float): bool
+    }
+
+    MetodoPago <|-- TarjetaCredito
+    MetodoPago <|-- PayPal
+    Transaccion o-- MetodoPago
+```
+
 ### 2.3 Pruebas Unitarias
 
 ```python
@@ -196,10 +227,10 @@ if __name__ == '__main__':
 ```
 
 ### Ejercicio: Tests con estos valores
-Test 1: Pago con tarjeta de crédito de $100
-Test 2: Pago con PayPal de $50
-Test 3: Pago con tarjeta de crédito de $200
-Test 4: Hacer un listado de transacciones
+- Test 1: Pago con tarjeta de crédito de $100
+- Test 2: Pago con PayPal de $50
+- Test 3: Pago con tarjeta de crédito de $200
+- Test 4: Hacer un listado de transacciones mostrando el método de pago el monto y la fecha
 
 ```python
 from abc import ABC, abstractmethod
