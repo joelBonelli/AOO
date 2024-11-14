@@ -201,6 +201,116 @@ Test 2: Pago con PayPal de $50
 Test 3: Pago con tarjeta de crédito de $200
 Test 4: Hacer un listado de transacciones
 
+```python
+from abc import ABC, abstractmethod
+from datetime import datetime
+from typing import List, Dict
+import random
+
+class MetodoPago(ABC):
+    @abstractmethod
+    def procesar_pago(self, monto: float) -> bool:
+        pass
+    
+    @abstractmethod
+    def verificar_fondos(self, monto: float) -> bool:
+        pass
+
+class TarjetaCredito(MetodoPago):
+    def __init__(self, numero: str, fecha_vencimiento: str):
+        self.numero = numero
+        self.fecha_vencimiento = fecha_vencimiento
+    
+    def procesar_pago(self, monto: float) -> bool:
+        if self.verificar_fondos(monto):
+            print(f"Procesando pago de ${monto} con tarjeta {self.numero}")
+            return True
+        return False
+    
+    def verificar_fondos(self, monto: float) -> bool:
+        # Simulación de verificación de fondos
+        return True
+
+class PayPal(MetodoPago):
+    def __init__(self, email: str):
+        self.email = email
+    
+    def procesar_pago(self, monto: float) -> bool:
+        if self.verificar_fondos(monto):
+            print(f"Procesando pago de ${monto} con PayPal ({self.email})")
+            return True
+        return False
+    
+    def verificar_fondos(self, monto: float) -> bool:
+        # Simulación de verificación de fondos
+        return True
+
+class Transaccion:
+    def __init__(self, metodo_pago, monto, fecha=None):
+        self.metodo_pago = metodo_pago
+        self.monto = monto
+        self.fecha = fecha if fecha else self.generar_fecha_aleatoria()
+
+    def ejecutar_pago(self):
+        return self.metodo_pago.procesar_pago(self.monto)
+
+    def mostrar_fecha(self):
+        return self.fecha.strftime("%Y-%m-%d %H:%M:%S")
+
+    def generar_fecha_aleatoria(self):
+        start_date = datetime(2024, 1, 1)
+        end_date = datetime.now()
+        random_date = start_date + (end_date - start_date) * random.random()
+        return random_date
+```
+```python
+import unittest
+from metodoPago import TarjetaCredito, PayPal, Transaccion
+
+class TestMetodosPago(unittest.TestCase):
+    def setUp(self):
+        self.tarjeta1 = TarjetaCredito("1234-5678-9012-3456", "12/25")
+        self.tarjeta2 = TarjetaCredito("9876-5432-1098-7654", "11/24")
+        self.paypal = PayPal("usuario@email.com")
+        self.transacciones = []
+
+    def test_pago_tarjeta_100(self):
+        transaccion = Transaccion(self.tarjeta1, 100.0)
+        self.transacciones.append(transaccion)
+        self.assertTrue(transaccion.ejecutar_pago())
+    
+    def test_pago_paypal_50(self):
+        transaccion = Transaccion(self.paypal, 50.0)
+        self.transacciones.append(transaccion)
+        self.assertTrue(transaccion.ejecutar_pago())
+
+    def test_pago_tarjeta_200(self):
+        transaccion = Transaccion(self.tarjeta2, 200.0)
+        self.transacciones.append(transaccion)
+        self.assertTrue(transaccion.ejecutar_pago())
+
+    def test_listado_transacciones(self):
+        self.test_pago_tarjeta_100()
+        self.test_pago_paypal_50()
+        self.test_pago_tarjeta_200()
+        
+        print("\n")
+        print("Listado de transacciones:")
+        for transaccion in self.transacciones:
+            metodo = transaccion.metodo_pago
+            monto = transaccion.monto
+            fecha = transaccion.mostrar_fecha()
+            if isinstance(metodo, TarjetaCredito):
+                metodo_str = "Tarjeta de crédito"
+            else:
+                metodo_str = "PayPal"
+            print(f"{metodo_str}: ${monto} en {fecha}")
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+
 ## 3. Ejercicio Práctico: Sistema de Biblioteca
 
 ```python
