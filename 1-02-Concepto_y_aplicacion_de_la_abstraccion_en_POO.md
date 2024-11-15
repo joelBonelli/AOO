@@ -384,6 +384,60 @@ class DVD(MaterialBiblioteca):
 ### Hacer Diagrama de secuencia
 ### Hacer pruebas unitarias
 
+- Diagrama de clases
+```mermaid
+classDiagram
+    class MaterialBiblioteca {
+        -String codigo
+        -String titulo
+        -boolean prestado
+        -Optional~datetime~ fecha_devolucion
+        +calcular_fecha_devolucion() datetime
+        +prestar() boolean
+    }
+    class Libro {
+        +calcular_fecha_devolucion() datetime
+    }
+    class Revista {
+        +calcular_fecha_devolucion() datetime
+    }
+    class DVD {
+        +calcular_fecha_devolucion() datetime
+    }
+    MaterialBiblioteca <|-- Libro
+    MaterialBiblioteca <|-- Revista
+    MaterialBiblioteca <|-- DVD
+```
+- Diagrama de secuencia
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant MaterialBiblioteca
+    participant Libro
+    participant Revista
+    participant DVD
+
+    Cliente->>MaterialBiblioteca: Prestar()
+    MaterialBiblioteca->>Libro: calcular_fecha_devolucion()
+    Libro-->>MaterialBiblioteca: devuelve fecha (14 días)
+    MaterialBiblioteca-->>Cliente: asigna fecha_devolucion y préstamo exitoso
+    
+    Cliente->>MaterialBiblioteca: Prestar()
+    MaterialBiblioteca->>Revista: calcular_fecha_devolucion()
+    Revista-->>MaterialBiblioteca: devuelve fecha (7 días)
+    MaterialBiblioteca-->>Cliente: asigna fecha_devolucion y préstamo exitoso
+    
+    Cliente->>MaterialBiblioteca: Prestar()
+    MaterialBiblioteca->>DVD: calcular_fecha_devolucion()
+    DVD-->>MaterialBiblioteca: devuelve fecha (3 días)
+    MaterialBiblioteca-->>Cliente: asigna fecha_devolucion y préstamo exitoso
+
+
+```
+
+
+
+
 ## 4. Mejores Prácticas
 
 1. **Diseño**:
