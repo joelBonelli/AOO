@@ -69,6 +69,93 @@ class CuentaBancaria:
         return self.__transacciones.copy()
 
 ```
+### Sistema de biblioteca
+```python
+class Libro:
+    def __init__(self, titulo: str, autor: str, anio_publicacion: int):
+        self.__titulo = titulo
+        self.__autor = autor
+        self.__anio_publicacion = anio_publicacion
+
+    @property
+    def titulo(self) -> str:
+        return self.__titulo
+
+    @property
+    def autor(self) -> str:
+        return self.__autor
+
+    @property
+    def anio_publicacion(self) -> int:
+        return self.__anio_publicacion
+
+    def __str__(self) -> str:
+        return f"'{self.__titulo}' por {self.__autor}, publicado en {self.__anio_publicacion}"
+
+
+
+class GestionDeLibros:
+    def __init__(self):
+        self.__libros: List[dict] = []
+        self.__historial: List[dict] = []
+
+    @property
+    def libros(self) -> List[dict]:
+        return self.__libros
+
+    def agregar_libro(self, titulo: str, autor: str, anio_publicacion: int) -> None:
+        if any(libro['titulo'] == titulo for libro in self.__libros):
+            raise ValueError(f"El libro '{titulo}' ya está en la colección.")
+
+        libro = {
+            'titulo': titulo,
+            'autor': autor,
+            'anio_publicacion': anio_publicacion,
+            'fecha_agregado': datetime.now()
+        }
+        self.__libros.append(libro)
+        self.__registrar_historial("agregar", titulo)
+
+    def eliminar_libro(self, titulo: str) -> None:
+        libro_encontrado = False
+        for libro in self.__libros:
+            if libro['titulo'] == titulo:
+                self.__libros.remove(libro)
+                self.__registrar_historial("eliminar", titulo)
+                libro_encontrado = True
+                break
+        
+        if not libro_encontrado:
+            raise ValueError(f"El libro '{titulo}' no fue encontrado.")
+
+    def actualizar_libro(self, titulo: str, nuevo_titulo: str = None, nuevo_autor: str = None, nuevo_anio: int = None) -> None:
+        libro_encontrado = False
+        for libro in self.__libros:
+            if libro['titulo'] == titulo:
+                if nuevo_titulo:
+                    libro['titulo'] = nuevo_titulo
+                if nuevo_autor:
+                    libro['autor'] = nuevo_autor
+                if nuevo_anio:
+                    libro['anio_publicacion'] = nuevo_anio
+                self.__registrar_historial("actualizar", titulo)
+                libro_encontrado = True
+                break
+        
+        if not libro_encontrado:
+            raise ValueError(f"El libro '{titulo}' no fue encontrado.")
+
+    def __registrar_historial(self, accion: str, titulo: str) -> None:
+        self.__historial.append({
+            'fecha': datetime.now(),
+            'accion': accion,
+            'titulo': titulo
+        })
+
+     def obtener_historial(self) -> List[dict]:
+        return self.__historial.copy()
+```
+
 
 ### 2.2 Sistema de Gestión de Empleados
 
