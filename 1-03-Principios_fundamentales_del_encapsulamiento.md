@@ -71,30 +71,68 @@ class CuentaBancaria:
 ```
 ### Sistema de biblioteca
 ```python
+from abc import ABC, abstractmethod
+from typing import List
+from datetime import datetime
+
+
+class EntidadObjeto(ABC):
+    """Clase abstracta que define las operaciones básicas para gestionar objetos."""
+
+    @abstractmethod
+    def agregar(self, objeto) -> None:
+        """Método abstracto para agregar un objeto."""
+        pass
+
+    @abstractmethod
+    def eliminar(self, objeto) -> None:
+        """Método abstracto para eliminar un objeto."""
+        pass
+
+    @abstractmethod
+    def actualizar(self, objeto_antiguo, objeto_nuevo) -> None:
+        """Método abstracto para actualizar un objeto."""
+        pass
+
+    @abstractmethod
+    def obtener_historial(self) -> List[dict]:
+        """Método abstracto para obtener el historial de acciones realizadas."""
+        pass
+
+
+
+
 class Libro:
     def __init__(self, titulo: str, autor: str, anio_publicacion: int):
+        """Inicializa un libro con título, autor y año de publicación."""
         self.__titulo = titulo
         self.__autor = autor
         self.__anio_publicacion = anio_publicacion
 
     @property
     def titulo(self) -> str:
+        """Obtiene el título del libro."""
         return self.__titulo
 
     @property
     def autor(self) -> str:
+        """Obtiene el autor del libro."""
         return self.__autor
 
     @property
     def anio_publicacion(self) -> int:
+        """Obtiene el año de publicación del libro."""
         return self.__anio_publicacion
 
     def __str__(self) -> str:
+        """Representación en formato de cadena del libro."""
         return f"'{self.__titulo}' por {self.__autor}, publicado en {self.__anio_publicacion}"
 
 
 
-class GestionDeLibros:
+
+
+class GestionDeLibros(EntidadObjeto):
     def __init__(self):
         # Inicializamos la lista de libros y el historial de cambios
         self.__libros: List[Libro] = []
@@ -105,58 +143,50 @@ class GestionDeLibros:
         """Obtiene la lista actual de libros."""
         return self.__libros
 
-    def agregar_libro(self, titulo: str, autor: str, anio_publicacion: int) -> None:
+    def agregar(self, libro: Libro) -> None:
         """Agrega un nuevo libro a la colección."""
         # Verificar si el libro ya existe (por título)
-        if any(libro.titulo == titulo for libro in self.__libros):
-            raise ValueError(f"El libro '{titulo}' ya está en la colección.")
-
-        libro = Libro(titulo, autor, anio_publicacion)
+        if any(libro.titulo == l.titulo for l in self.__libros):
+            raise ValueError(f"El libro '{libro.titulo}' ya está en la colección.")
         self.__libros.append(libro)
-        self.__registrar_historial("agregar", titulo)
+        self.__registrar_historial("agregar", libro)
 
-    def eliminar_libro(self, titulo: str) -> None:
-        """Elimina un libro por su título."""
+    def eliminar(self, libro: Libro) -> None:
+        """Elimina un libro de la colección."""
         libro_encontrado = False
-        for libro in self.__libros:
-            if libro.titulo == titulo:
-                self.__libros.remove(libro)
-                self.__registrar_historial("eliminar", titulo)
+        for l in self.__libros:
+            if l.titulo == libro.titulo:
+                self.__libros.remove(l)
+                self.__registrar_historial("eliminar", libro)
                 libro_encontrado = True
                 break
-        
         if not libro_encontrado:
-            raise ValueError(f"El libro '{titulo}' no fue encontrado.")
+            raise ValueError(f"El libro '{libro.titulo}' no fue encontrado.")
 
-    def actualizar_libro(self, titulo: str, nuevo_titulo: str = None, nuevo_autor: str = None, nuevo_anio: int = None) -> None:
+    def actualizar(self, libro_antiguo: Libro, libro_nuevo: Libro) -> None:
         """Actualiza un libro existente por su título."""
         libro_encontrado = False
-        for libro in self.__libros:
-            if libro.titulo == titulo:
-                if nuevo_titulo:
-                    libro._Libro__titulo = nuevo_titulo
-                if nuevo_autor:
-                    libro._Libro__autor = nuevo_autor
-                if nuevo_anio:
-                    libro._Libro__anio_publicacion = nuevo_anio
-                self.__registrar_historial("actualizar", titulo)
+        for i, l in enumerate(self.__libros):
+            if l.titulo == libro_antiguo.titulo:
+                self.__libros[i] = libro_nuevo
+                self.__registrar_historial("actualizar", libro_antiguo)
                 libro_encontrado = True
                 break
-        
         if not libro_encontrado:
-            raise ValueError(f"El libro '{titulo}' no fue encontrado.")
+            raise ValueError(f"El libro '{libro_antiguo.titulo}' no fue encontrado.")
 
-    def __registrar_historial(self, accion: str, titulo: str) -> None:
+    def __registrar_historial(self, accion: str, libro: Libro) -> None:
         """Método privado para registrar las operaciones realizadas."""
         self.__historial.append({
             'fecha': datetime.now(),
             'accion': accion,
-            'titulo': titulo
+            'titulo': libro.titulo
         })
 
     def obtener_historial(self) -> List[dict]:
         """Obtiene una copia del historial de acciones realizadas con los libros."""
         return self.__historial.copy()
+
 ```
 
 
