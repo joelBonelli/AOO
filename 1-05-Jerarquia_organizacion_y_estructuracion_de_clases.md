@@ -64,7 +64,100 @@ class RecursoDigital(RecursoBiblioteca):
     def tiempo_prestamo(self) -> timedelta:
         return timedelta(days=3)
 ```
+## Jerarquia Ej. vehiculos
 
+```python
+from abc import ABC, abstractmethod
+
+# Clase base abstracta Vehiculo
+class Vehiculo(ABC):
+    def __init__(self, marca: str, modelo: str, año: int):
+        self.marca = marca
+        self.modelo = modelo
+        self.año = año
+
+    @abstractmethod
+    def mover(self):
+        """Método abstracto que debe ser implementado por las subclases."""
+        pass
+
+    def __str__(self):
+        """Representación en cadena del vehículo."""
+        return f"{self.marca} {self.modelo} ({self.año})"
+
+
+# Clase Motocicleta (hereda de Vehiculo)
+class Motocicleta(Vehiculo):
+    def __init__(self, marca: str, modelo: str, año: int, tipo_motor: str):
+        super().__init__(marca, modelo, año)
+        self.tipo_motor = tipo_motor  # Ejemplo: 2 tiempos, 4 tiempos
+
+    def mover(self):
+        """Método específico para motos."""
+        print(f"La motocicleta {self.marca} {self.modelo} ({self.año}) está acelerando rápidamente.")
+
+    def __str__(self):
+        return f"Motocicleta {self.marca} {self.modelo} ({self.año}), Motor: {self.tipo_motor}"
+
+
+# Clase Automovil (hereda de Vehiculo)
+class Automovil(Vehiculo):
+    def __init__(self, marca: str, modelo: str, año: int, tipo_combustible: str):
+        super().__init__(marca, modelo, año)
+        self.tipo_combustible = tipo_combustible  # Ejemplo: gasolina, electrico
+
+    def mover(self):
+        """Método específico para automóviles."""
+        print(f"El automóvil {self.marca} {self.modelo} ({self.año}) está circulando por la carretera.")
+
+    def __str__(self):
+        return f"Automóvil {self.marca} {self.modelo} ({self.año}), Combustible: {self.tipo_combustible}"
+
+
+# Clase Sedan (hereda de Automovil)
+class Sedan(Automovil):
+    def __init__(self, marca: str, modelo: str, año: int, tipo_combustible: str, num_puertas: int):
+        super().__init__(marca, modelo, año, tipo_combustible)
+        self.num_puertas = num_puertas  # Ejemplo: 4 puertas
+
+    def mover(self):
+        """Método específico para un sedán."""
+        print(f"El sedán {self.marca} {self.modelo} ({self.año}) está viajando cómodamente.")
+
+    def __str__(self):
+        return f"Sedán {self.marca} {self.modelo} ({self.año}), Combustible: {self.tipo_combustible}, Puertas: {self.num_puertas}"
+
+
+# Clase SUV (hereda de Automovil)
+class SUV(Automovil):
+    def __init__(self, marca: str, modelo: str, año: int, tipo_combustible: str, traccion: str):
+        super().__init__(marca, modelo, año, tipo_combustible)
+        self.traccion = traccion  # Ejemplo: tracción en las 4 ruedas (AWD), tracción delantera (FWD)
+
+    def mover(self):
+        """Método específico para SUV."""
+        print(f"El SUV {self.marca} {self.modelo} ({self.año}) está atravesando terrenos difíciles.")
+
+    def __str__(self):
+        return f"SUV {self.marca} {self.modelo} ({self.año}), Combustible: {self.tipo_combustible}, Tracción: {self.traccion}"
+
+
+# Clase Camion (hereda de Vehiculo)
+class Camion(Vehiculo):
+    def __init__(self, marca: str, modelo: str, año: int, capacidad_carga: int):
+        super().__init__(marca, modelo, año)
+        self.capacidad_carga = capacidad_carga  # Ejemplo: capacidad de carga en toneladas
+
+    def mover(self):
+        """Método específico para camiones."""
+        print(f"El camión {self.marca} {self.modelo} ({self.año}) está transportando carga.")
+
+    def __str__(self):
+        return f"Camión {self.marca} {self.modelo} ({self.año}), Capacidad de carga: {self.capacidad_carga} toneladas"
+
+
+
+```
 ### 1.2 Implementación con Composición
 
 ```python
