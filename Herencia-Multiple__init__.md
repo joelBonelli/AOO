@@ -81,3 +81,54 @@ print(auto.marca)      # Accede a variable privada vía property
 print(auto.mover())    # Usa método implementado
 print(auto.cargar())   # Usa método implementado
 ```
+# Sin constructor abstracto
+
+```python
+from abc import ABC, abstractmethod
+
+class Vehiculo(ABC):
+    @abstractmethod
+    def mover(self):
+        pass
+
+class Electrico(ABC):
+    @abstractmethod
+    def cargar(self):
+        pass
+
+class AutoElectrico(Vehiculo, Electrico):
+    def __init__(self, marca, voltaje, modelo):
+        self.__marca = marca
+        self.__voltaje = voltaje
+        self.__modelo = modelo
+        
+    @property
+    def marca(self):
+        return self.__marca
+        
+    @property
+    def voltaje(self):
+        return self.__voltaje
+        
+    @property
+    def modelo(self):
+        return self.__modelo
+        
+    def mover(self):
+        return f"{self.marca} {self.modelo} en movimiento"
+        
+    def cargar(self):
+        return f"Cargando a {self.voltaje}V"
+
+# Ejemplo de uso
+auto = AutoElectrico("Tesla", 220, "Model 3")
+print(auto.marca)      # Tesla
+print(auto.mover())    # Tesla Model 3 en movimiento
+print(auto.cargar())   # Cargando a 220V
+```
+
+**Puntos clave:**
+- Clases abstractas solo definen la interfaz (métodos requeridos)
+- Variables privadas y propiedades solo en clase concreta
+- No es necesario constructor en clases abstractas si solo definen interfaz
+- La clase hija debe implementar todos los métodos abstractos
