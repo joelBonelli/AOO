@@ -283,17 +283,17 @@ sequenceDiagram
     Libro-->>Biblioteca: Ya prestado
     Biblioteca-->>Test: False
 
-    Test->>Biblioteca: prestar_recurso("L1", "U1")
-    Biblioteca->>Libro: Verificar si está prestado
-    Libro-->>Biblioteca: No prestado
-    Libro->>Libro: Marcar como prestado
-    Biblioteca-->>Test: True
-
     Test->>Libro: devolver()
     Libro->>Libro: Cambiar estado a no prestado
     Libro-->>Test: True
     Test->>Libro: Verificar estado
     Libro-->>Test: False
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: No prestado
+    Libro->>Libro: Marcar como prestado
+    Biblioteca-->>Test: True
 
 ```
 ## 4. Mejores Prácticas
