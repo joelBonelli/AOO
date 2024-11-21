@@ -172,7 +172,45 @@ class ServicioNotificaciones:
         for notificador in self.notificadores:
             notificador.enviar(destinatario, mensaje)
 ```
-
+```mermaid
+classDiagram
+    class Destinatario {
+        <<Protocol>>
+        +obtener_direccion() str
+    }
+    
+    class Cliente {
+        +email: str
+        +telefono: str
+        +obtener_direccion() str
+    }
+    
+    class Notificacion {
+        <<Abstract>>
+        +enviar(destinatario: Destinatario, mensaje: str) bool
+    }
+    
+    class NotificacionEmail {
+        +enviar(destinatario: Destinatario, mensaje: str) bool
+    }
+    
+    class NotificacionSMS {
+        +enviar(destinatario: Cliente, mensaje: str) bool
+    }
+    
+    class ServicioNotificaciones {
+        -notificadores: List~Notificacion~
+        +agregar_notificador(notificador: Notificacion) void
+        +notificar_todos(destinatario: Destinatario, mensaje: str) void
+    }
+    
+    Destinatario <|.. Cliente
+    Notificacion <|-- NotificacionEmail
+    Notificacion <|-- NotificacionSMS
+    ServicioNotificaciones o--> Notificacion
+    NotificacionEmail ..> Destinatario : uses
+    NotificacionSMS ..> Cliente : uses
+```
 ## 3. Pruebas Unitarias
 
 ```python
