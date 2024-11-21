@@ -172,6 +172,7 @@ class ServicioNotificaciones:
         for notificador in self.notificadores:
             notificador.enviar(destinatario, mensaje)
 ```
+### Diagrama
 ```mermaid
 classDiagram
     class Destinatario {
