@@ -259,7 +259,43 @@ class TestNotificaciones(unittest.TestCase):
             "Prueba de notificación"
         )
 ```
+### Diagrama de secuencia
+```mermaid
+sequenceDiagram
+    participant Test as TestBiblioteca
+    participant Biblioteca as Biblioteca
+    participant Libro as Libro
+    participant Usuario as Usuario
 
+    Test->>Biblioteca: agregar_recurso(Libro)
+    Biblioteca-->>Biblioteca: Agregar libro a la lista de recursos
+    Test->>Biblioteca: agregar_usuario(Usuario)
+    Biblioteca-->>Biblioteca: Agregar usuario a la lista de usuarios
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: No prestado
+    Biblioteca-->>Test: True
+    Libro->>Libro: Marcar como prestado
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: Ya prestado
+    Biblioteca-->>Test: False
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: No prestado
+    Libro->>Libro: Marcar como prestado
+    Biblioteca-->>Test: True
+
+    Test->>Libro: devolver()
+    Libro->>Libro: Cambiar estado a no prestado
+    Libro-->>Test: True
+    Test->>Libro: Verificar estado
+    Libro-->>Test: False
+
+```
 ## 4. Mejores Prácticas
 
 1. **Herencia**:
