@@ -265,7 +265,46 @@ class ServicioNotificaciones:
         for notificador in self.notificadores:
             notificador.enviar(destinatario, mensaje)
 ```
-
+### Diagrama
+```mermaid
+classDiagram
+    class Destinatario {
+        <<Protocol>>
+        +obtener_direccion() str
+    }
+    
+    class Cliente {
+        +email: str
+        +telefono: str
+        +obtener_direccion() str
+    }
+    
+    class Notificacion {
+        <<Abstract>>
+        +enviar(destinatario: Destinatario, mensaje: str) bool
+    }
+    
+    class NotificacionEmail {
+        +enviar(destinatario: Destinatario, mensaje: str) bool
+    }
+    
+    class NotificacionSMS {
+        +enviar(destinatario: Cliente, mensaje: str) bool
+    }
+    
+    class ServicioNotificaciones {
+        -notificadores: List~Notificacion~
+        +agregar_notificador(notificador: Notificacion) void
+        +notificar_todos(destinatario: Destinatario, mensaje: str) void
+    }
+    
+    Destinatario <|.. Cliente
+    Notificacion <|-- NotificacionEmail
+    Notificacion <|-- NotificacionSMS
+    ServicioNotificaciones o--> Notificacion
+    NotificacionEmail ..> Destinatario : uses
+    NotificacionSMS ..> Cliente : uses
+```
 ## 3. Pruebas Unitarias
 
 ```python
@@ -313,7 +352,43 @@ class TestNotificaciones(unittest.TestCase):
             "Prueba de notificación"
         )
 ```
+### Diagrama de secuencia
+```mermaid
+sequenceDiagram
+    participant Test as TestBiblioteca
+    participant Biblioteca as Biblioteca
+    participant Libro as Libro
+    participant Usuario as Usuario
 
+    Test->>Biblioteca: agregar_recurso(Libro)
+    Biblioteca-->>Biblioteca: Agregar libro a la lista de recursos
+    Test->>Biblioteca: agregar_usuario(Usuario)
+    Biblioteca-->>Biblioteca: Agregar usuario a la lista de usuarios
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: No prestado
+    Biblioteca-->>Test: True
+    Libro->>Libro: Marcar como prestado
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: Ya prestado
+    Biblioteca-->>Test: False
+
+    Test->>Libro: devolver()
+    Libro->>Libro: Cambiar estado a no prestado
+    Libro-->>Test: True
+    Test->>Libro: Verificar estado
+    Libro-->>Test: False
+
+    Test->>Biblioteca: prestar_recurso("L1", "U1")
+    Biblioteca->>Libro: Verificar si está prestado
+    Libro-->>Biblioteca: No prestado
+    Libro->>Libro: Marcar como prestado
+    Biblioteca-->>Test: True
+
+```
 ## 4. Mejores Prácticas
 
 1. **Herencia**:
