@@ -1,4 +1,4 @@
-# Composición en Python: Guía Completa con Ejemplos
+# Composición en Python
 
 ## ¿Qué es la Composición?
 
